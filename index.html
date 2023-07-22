@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,7 +7,48 @@
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div class="app">
+      <h1><span>CSS</span> ANIMATION EDITOR</h1>
+      <div class="editor">
+        <label for="animation-type">Type of Animation:</label>
+        <select class="editor__animation-type" id="animation-type">
+          <option value="translate">Translate</option>
+          <option value="rotate">Rotate</option>
+          <option value="scale">Scale</option>
+        </select>
+        <label for="animation-duration">Duration:</label>
+        <input
+          type="number"
+          class="editor__animation-duration"
+          id="animation-duration"
+          min="1"
+          max="10"
+          value="1"
+        />
+        <label for="animation-delay">Delay:</label>
+        <input
+          type="number"
+          class="editor__animation-delay"
+          id="animation-delay"
+          min="0"
+          max="10"
+          value="0"
+        />
+        <label for="animation-timing">Timing Function:</label>
+        <select class="editor__animation-timing" id="animation-timing">
+          <option value="linear">Linear</option>
+          <option value="ease-in">Ease-In</option>
+          <option value="ease-out">Ease-Out</option>
+          <option value="ease-in-out">Ease-In-Out</option>
+        </select>
+        <button class="editor__startStop">Start</button>
+      </div>
+      <div class="preview-box"></div>
+      <div class="css-output">
+        <button class="css-output__copyBtn"></button>
+        <textarea class="css-output__text" spellcheck="false"></textarea>
+      </div>
+    </div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

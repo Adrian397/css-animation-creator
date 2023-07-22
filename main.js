@@ -1,24 +1,97 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+import {
+  animationDelay,
+  animationDuration,
+  animationTiming,
+  animationType,
+  copyBtn,
+  cssOutput,
+  previewBox,
+  startStopButton,
+} from "./main.util";
+import "./style.scss";
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+const START = "Start";
+const STOP = "Stop";
+let isAnimationRunning = false;
 
-setupCounter(document.querySelector('#counter'))
+const updateAnimation = () => {
+  const type = animationType.value;
+  const duration = animationDuration.value;
+  const delay = animationDelay.value;
+  const timing = animationTiming.value;
+
+  previewBox.style.animation = "none";
+
+  setTimeout(() => {
+    previewBox.style.animationName = type;
+    previewBox.style.animationDuration = `${duration}s`;
+    previewBox.style.animationDelay = `${delay}s`;
+    previewBox.style.animationTimingFunction = timing;
+    previewBox.style.animationPlayState = isAnimationRunning
+      ? "running"
+      : "paused";
+
+    cssOutput.value =
+      `animation-name: ${type};\n` +
+      `animation-duration: ${duration}s;\n` +
+      `animation-delay: ${delay}s;\n` +
+      `animation-timing-function: ${timing};\n`;
+  }, 0);
+};
+
+const handleStartStopBtn = () => {
+  isAnimationRunning = !isAnimationRunning;
+
+  const customStyles = cssOutput.value;
+  customStyles.split(";").forEach((style) => {
+    const [key, value] = style.split(":");
+
+    if (key && value) {
+      switch (key.trim()) {
+        case "animation-name":
+          animationType.value = value.trim();
+          break;
+        case "animation-duration":
+          animationDuration.value = value.trim().replace("s", "");
+          break;
+        case "animation-delay":
+          animationDelay.value = value.trim().replace("s", "");
+          break;
+        case "animation-timing-function":
+          animationTiming.value = value.trim();
+          break;
+      }
+    }
+  });
+
+  updateAnimation();
+  startStopButton.textContent = isAnimationRunning ? STOP : START;
+  startStopButton.style.backgroundColor = isAnimationRunning
+    ? "#dc143c"
+    : "#50b0dd";
+};
+
+const handleCopyBtn = async () => {
+  try {
+    await navigator.clipboard.writeText(cssOutput.value);
+    alert("Code successfully copied!");
+  } catch (err) {
+    alert("Failed to copy the code");
+    console.log(err);
+  }
+};
+
+const onAnimationEnd = () => {
+  isAnimationRunning = false;
+  startStopButton.textContent = START;
+  startStopButton.style.backgroundColor = "#50b0dd";
+};
+
+[animationType, animationDuration, animationDelay, animationTiming].forEach(
+  (input) => input.addEventListener("change", updateAnimation)
+);
+startStopButton.addEventListener("click", handleStartStopBtn);
+previewBox.addEventListener("animationend", onAnimationEnd);
+copyBtn.addEventListener("click", handleCopyBtn);
+
+updateAnimation();
