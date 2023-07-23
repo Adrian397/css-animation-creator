@@ -45,8 +45,27 @@
       </div>
       <div class="preview-box"></div>
       <div class="css-output">
-        <button class="css-output__copyBtn"></button>
-        <textarea class="css-output__text" spellcheck="false"></textarea>
+        <div>
+          <button
+            class="css-output__copyBtn"
+            data-target="css-output__properties"
+          ></button>
+          <textarea
+            class="css-output__properties"
+            spellcheck="false"
+          ></textarea>
+        </div>
+        <div>
+          <button
+            class="css-output__copyBtn"
+            data-target="css-output__keyframes"
+          ></button>
+          <textarea
+            class="css-output__keyframes"
+            spellcheck="false"
+            readonly
+          ></textarea>
+        </div>
       </div>
     </div>
     <script type="module" src="/main.js"></script>

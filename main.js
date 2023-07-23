@@ -3,8 +3,10 @@ import {
   animationDuration,
   animationTiming,
   animationType,
-  copyBtn,
-  cssOutput,
+  copyBtns,
+  cssKeyframesOutput,
+  cssPropertiesOutput,
+  getKeyframeCSS,
   previewBox,
   startStopButton,
 } from "./main.util";
@@ -20,6 +22,8 @@ const updateAnimation = () => {
   const delay = animationDelay.value;
   const timing = animationTiming.value;
 
+  const cssKeyframes = getKeyframeCSS(type);
+
   previewBox.style.animation = "none";
 
   setTimeout(() => {
@@ -31,19 +35,21 @@ const updateAnimation = () => {
       ? "running"
       : "paused";
 
-    cssOutput.value =
+    cssPropertiesOutput.value =
       `animation-name: ${type};\n` +
       `animation-duration: ${duration}s;\n` +
       `animation-delay: ${delay}s;\n` +
-      `animation-timing-function: ${timing};\n`;
+      `animation-timing-function: ${timing};`;
+
+    cssKeyframesOutput.value = cssKeyframes;
   }, 0);
 };
 
 const handleStartStopBtn = () => {
   isAnimationRunning = !isAnimationRunning;
 
-  const customStyles = cssOutput.value;
-  customStyles.split(";").forEach((style) => {
+  const insertedValues = cssPropertiesOutput.value;
+  insertedValues.split(";").forEach((style) => {
     const [key, value] = style.split(":");
 
     if (key && value) {
@@ -71,7 +77,8 @@ const handleStartStopBtn = () => {
     : "#50b0dd";
 };
 
-const handleCopyBtn = async () => {
+const handleCopyBtn = async (btn) => {
+  const cssOutput = document.querySelector(`.${btn.dataset.target}`);
   try {
     await navigator.clipboard.writeText(cssOutput.value);
     alert("Code successfully copied!");
@@ -92,6 +99,8 @@ const onAnimationEnd = () => {
 );
 startStopButton.addEventListener("click", handleStartStopBtn);
 previewBox.addEventListener("animationend", onAnimationEnd);
-copyBtn.addEventListener("click", handleCopyBtn);
+copyBtns.forEach((button) =>
+  button.addEventListener("click", () => handleCopyBtn(button))
+);
 
 updateAnimation();
