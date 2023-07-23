@@ -49,13 +49,19 @@ body {
 
 h1 {
   font-size: 3rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   letter-spacing: 5px;
   color: #333;
 
   span {
     color: #50b0dd;
   }
+}
+
+p {
+  margin-bottom: 2rem;
+  font-size: 15px;
+  color: #333;
 }
 
 .preview-box {

@@ -9,6 +9,15 @@
   <body>
     <div class="app">
       <h1><span>CSS</span> ANIMATION EDITOR</h1>
+      <p>
+        You can control animation type, duration, delay and timing using
+        interface<br />and additionaly you can create your custom animation
+        inside <strong>@keyframes</strong> box. <br />In order to make your
+        custom css work make sure that <strong>@keyframes</strong> function
+        <br />name is compatible with the
+        <strong>animation-name</strong> property (properties box) and that
+        <br />your code inside is compatible with CSS rules!
+      </p>
       <div class="editor">
         <label for="animation-type">Type of Animation:</label>
         <select class="editor__animation-type" id="animation-type">
@@ -53,6 +62,7 @@
           <textarea
             class="css-output__properties"
             spellcheck="false"
+            readonly
           ></textarea>
         </div>
         <div>
@@ -60,11 +70,7 @@
             class="css-output__copyBtn"
             data-target="css-output__keyframes"
           ></button>
-          <textarea
-            class="css-output__keyframes"
-            spellcheck="false"
-            readonly
-          ></textarea>
+          <textarea class="css-output__keyframes" spellcheck="false"></textarea>
         </div>
       </div>
     </div>

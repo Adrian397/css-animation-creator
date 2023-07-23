@@ -18,36 +18,27 @@ export const cssKeyframesOutput = document.querySelector(
 );
 export const copyBtns = document.querySelectorAll(".css-output__copyBtn");
 
-export const getKeyframeCSS = (type) => {
-  switch (type) {
-    case "translate":
-      return `@keyframes ${type} {
-    0% {
-      transform: translateX(0);
+export const loadDefaultKeyframes = (type) => {
+  const stylesheet = Array.from(document.styleSheets).find(
+    (sheet) =>
+      sheet.href === null || sheet.href.startsWith(window.location.origin)
+  );
+  const keyframesRule = Array.from(stylesheet.cssRules).find(
+    (rule) => rule.type === CSSRule.KEYFRAMES_RULE && rule.name === type
+  );
+
+  cssKeyframesOutput.value = keyframesRule ? keyframesRule.cssText : "";
+};
+
+export const addKeyframeRule = (stylesheet, rule) => {
+  if (rule.trim() !== "") {
+    while (stylesheet.cssRules.length > 0) {
+      stylesheet.deleteRule(0);
     }
-    100% {
-      transform: translateX(100px);
+    try {
+      stylesheet.insertRule(rule, stylesheet.cssRules.length);
+    } catch (err) {
+      console.error("Failed to insert rule:", err);
     }
-  }`;
-    case "rotate":
-      return `@keyframes ${type} {
-   0% {
-    transform: rotate(0deg);
-   }
-   100% {
-    transform: rotate(360deg);
-   }
-  }`;
-    case "scale":
-      return `@keyframes ${type} {
-   0% {
-    transform: scale(1);
-   }
-   100% {
-    transform: scale(1.5);
-   }
-  }`;
-    default:
-      return "";
   }
 };

@@ -1,4 +1,5 @@
 import {
+  addKeyframeRule,
   animationDelay,
   animationDuration,
   animationTiming,
@@ -6,11 +7,15 @@ import {
   copyBtns,
   cssKeyframesOutput,
   cssPropertiesOutput,
-  getKeyframeCSS,
+  loadDefaultKeyframes,
   previewBox,
   startStopButton,
 } from "./main.util";
 import "./style.scss";
+
+const styleElement = document.createElement("style");
+document.head.appendChild(styleElement);
+const styleSheet = styleElement.sheet;
 
 const START = "Start";
 const STOP = "Stop";
@@ -21,8 +26,6 @@ const updateAnimation = () => {
   const duration = animationDuration.value;
   const delay = animationDelay.value;
   const timing = animationTiming.value;
-
-  const cssKeyframes = getKeyframeCSS(type);
 
   previewBox.style.animation = "none";
 
@@ -40,37 +43,15 @@ const updateAnimation = () => {
       `animation-duration: ${duration}s;\n` +
       `animation-delay: ${delay}s;\n` +
       `animation-timing-function: ${timing};`;
-
-    cssKeyframesOutput.value = cssKeyframes;
   }, 0);
 };
 
 const handleStartStopBtn = () => {
   isAnimationRunning = !isAnimationRunning;
 
-  const insertedValues = cssPropertiesOutput.value;
-  insertedValues.split(";").forEach((style) => {
-    const [key, value] = style.split(":");
-
-    if (key && value) {
-      switch (key.trim()) {
-        case "animation-name":
-          animationType.value = value.trim();
-          break;
-        case "animation-duration":
-          animationDuration.value = value.trim().replace("s", "");
-          break;
-        case "animation-delay":
-          animationDelay.value = value.trim().replace("s", "");
-          break;
-        case "animation-timing-function":
-          animationTiming.value = value.trim();
-          break;
-      }
-    }
-  });
-
+  addKeyframeRule(styleSheet, cssKeyframesOutput.value);
   updateAnimation();
+
   startStopButton.textContent = isAnimationRunning ? STOP : START;
   startStopButton.style.backgroundColor = isAnimationRunning
     ? "#dc143c"
@@ -94,6 +75,9 @@ const onAnimationEnd = () => {
   startStopButton.style.backgroundColor = "#50b0dd";
 };
 
+animationType.addEventListener("change", () => {
+  loadDefaultKeyframes(animationType.value);
+});
 [animationType, animationDuration, animationDelay, animationTiming].forEach(
   (input) => input.addEventListener("change", updateAnimation)
 );
@@ -103,4 +87,5 @@ copyBtns.forEach((button) =>
   button.addEventListener("click", () => handleCopyBtn(button))
 );
 
+loadDefaultKeyframes(animationType.value);
 updateAnimation();
